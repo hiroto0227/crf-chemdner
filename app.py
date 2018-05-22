@@ -20,7 +20,6 @@ def predict():
     text = request.args.get('text')
     features = tf.convertTextToNgram(text)
     pred_labels = crf_model.predict(features)
-    print(pred_labels)
     ann_data = tf.convertLabelsToAnn(text, pred_labels)
     return jsonify(ann_data)
 
