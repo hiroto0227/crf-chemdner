@@ -1,0 +1,12 @@
+/storage/datas/train/
+/storage/datas/valid/
+/storage/datas/test/
+
+/storage/models/
+
+/storage/transformers/
+
+/storage/rawdatas/
+
+*.pyc
+/datas/
