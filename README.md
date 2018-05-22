@@ -25,4 +25,13 @@ CRF model for chemdner
 │   ├── models.py
 │   ├── trainer.py
 │   └── transformer.py
+├── storage # git ignore
+    ├── datas
+    │   ├── train
+    │   ├── valid
+    │   └── test
+    ├── models
+    │   └── crf_suite_v1
+    ├── rawdatas
+    └── transformers
 ```
