@@ -8,5 +8,6 @@
 
 /storage/rawdatas/
 
+__pycache__
 *.pyc
 /datas/

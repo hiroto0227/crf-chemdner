@@ -10,8 +10,10 @@ if __name__ == '__main__':
     features = []
     labels = []
     for text, ann in tqdm(zip(train_texts, train_anns)):
-        features.extend(tf.convertTextToNgram(text))
-        labels.extend(tf.convertAnnsToLabels(ann, len(text)))
+        features.extend(tf.convertTextToLetterNgram(text))
+        labels.extend(tf.convertAnnsToLetterLabels(ann, len(text)))
     assert len(features) == len(labels), 'Not the same length, features and labels'
-    trainer = trainer.CRFTrainer()
-    trainer.train(config.model_root + 'crf_suite_v1', features, labels)
+    print('training start!!!')
+    letter_trainer = trainer.CRFTrainer()
+    letter_trainer.train(config.model_root + 'crf_suite_letter', features, labels)
+    print('training end !!!')
