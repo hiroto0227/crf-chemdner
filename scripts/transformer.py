@@ -1,4 +1,5 @@
 from chemdataextractor.nlp.tokenize import ChemWordTokenizer
+import re
 
 def getNgram(array, n_range=(-2, 2), mode='letter'):
     """n_range[0]からn_range[1]までのiの周辺語を繋げて返す。
@@ -112,7 +113,7 @@ class WordLevelTransformer():
     def convertTextToFeatures(self, text):
         """textをn-gramの辞書にして返す。
         """
-        array = self.cwt.tokenize(text)
+        array = [token for token, start, end in tokenize(text)]
         g_1_1 = getNgram(array, (-2, -2), mode='word')
         g_1_2 = getNgram(array, (-1, -1), mode='word')
         g_1_3 = getNgram(array, (0, 0), mode='word')
@@ -136,14 +137,14 @@ class WordLevelTransformer():
         ann_values = [v for ann in anns for k, v in ann.items()]
         labels = []
         ann_ix = 0
-        #print('★' * 30)
-        #print(anns)
-        for token, span in zip(self.cwt.tokenize(text), self.cwt.span_tokenize(text)):
+        for token, start, end in tokenize(text):
+            span = (start, end)
             if ann_ix == len(ann_values):
                 labels.append('O')
             else:
-                #print('----')
-                #print(token, span)
+                # annをうまく分割できなかった時に、ann_ixを一つ進める。
+                if ann_values[ann_ix][1] < start and ann_ix < len(ann_values) - 1:
+                    ann_ix += 1
                 # お互いのstartが同じだった場合。
                 if span[0] == ann_values[ann_ix][0] and span[1] == ann_values[ann_ix][1]:
                     labels.append('S')
@@ -157,7 +158,6 @@ class WordLevelTransformer():
                     labels.append('M')
                 else:
                     labels.append('O')
-        #print(labels)
         return labels
 
     def convertLabelsToAnn(self, text, labels):
@@ -166,19 +166,32 @@ class WordLevelTransformer():
         """
         ann_datas = []
         entity = ''
-        start = 0
-        for i, (token, span, label) in enumerate(zip(self.cwt.tokenize(text), self.cwt.span_tokenize(text), labels)):
+        _start = 0
+        for i, ((token, start, end), label) in enumerate(zip(tokenize(text), labels)):
             if label == 'O':
                 pass
             elif label == 'S':
-                ann_datas.append({token: (span[0], span[1])})
+                ann_datas.append({token: (start, end)})
             elif label == 'B':
-                start = span[0]
+                _start = start
                 entity += token
             elif label == 'M':
-                entity += ' ' + token
+                entity += token
             elif label == 'E':
-                entity += ' ' + token
-                ann_datas.append({entity: (start, span[1])})
+                entity += token
+                ann_datas.append({entity: (_start, end)})
                 entity = ''
         return ann_datas
+
+def tokenize(text):
+    """textをtokenに分割し、spanも加えて返す。
+    >>> tokenize("Glycero-β-d-manno-heptose 7-Phosphate"):
+    >>> [('Glycero', 0, 6), ('-', 7, 7), ('β', 8, 8), ('-', 9, 9), ('d', 10, 10), ('-', 11, 11), ('manno', 12, 16)]
+    """
+    ix = 0
+    tokens = []
+    for i, token in enumerate(re.split('( | |\xa0|\t|\n|…|\'|\"|·|~|↔|•|\!|@|#|\$|%|\^|&|\*|-|=|_|\+|ˉ|\(|\)|\[|\]|\{|\}|;|‘|:|“|,|\.|\/|<|>|×|>|<|≤|≥|↑|↓|¬|®|•|′|°|~|≈|\?|Δ|÷|≠|‘|’|“|”|§|£|€|0|1|2|3|4|5|6|7|8|9|™|⋅)', text)):
+        if len(token):
+            tokens.append((token, ix, ix + len(token)))
+            ix += len(token)
+    return tokens

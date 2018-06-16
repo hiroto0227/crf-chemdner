@@ -15,7 +15,7 @@ if __name__ == '__main__':
         label = tf.convertAnnsToLabels(ann, text)
         converted_ann = tf.convertLabelsToAnn(text, label)
         converted_anns.append(converted_ann)
-        if ann and converted_ann and [v for k, v in ann[0].items()] != [v for k, v in converted_ann[0].items()]:
+        if ann and converted_ann and ann != converted_ann:
             cprint('=' * 70, 'red')
             print(text)
             print('========')

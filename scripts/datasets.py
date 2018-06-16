@@ -11,7 +11,10 @@ def convertAnnData(annotate):
         entity = line.split('\t')[-1]
         start = int(line.split('\t')[1].split(' ')[1])
         end = int(line.split('\t')[1].split(' ')[-1])
-        ann_data.append({entity: (start, end)})
+        # annotateの中にentityがからのやつがあるので、ifで分けた方が良い。
+        if entity:
+            ann_data.append({entity: (start, end)})
+        #ann_data.append({entity: (start, end)})
     return ann_data
 
 

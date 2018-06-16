@@ -33,8 +33,11 @@ if __name__ == '__main__':
             for t in true_anns:
                 if p == t:
                     correct_count += 1
-    print('正解データ数 : {}'.format(all_true_count))
-    print('予測データ数 : {}'.format(all_pred_count))
-    print('正解数 : {}'.format(correct_count))
+    print('全entity数 : {}'.format(all_true_count))
+    print('予測entity数 : {}'.format(all_pred_count))
+    print('正解entity数 : {}'.format(correct_count))
+    precision = correct_count / all_pred_count
+    recall = correct_count / all_true_count
     print('精度 : {}'.format(correct_count / all_pred_count))
     print('再現率 : {}'.format(correct_count / all_true_count))
+    print('F値 : {}'.format(2 * precision * recall / (precision + recall)))
