@@ -7,7 +7,7 @@ from termcolor import cprint
 
 if __name__ == '__main__':
     test_texts, test_anns = datasets.test()
-    tf = transformer.WordLevelTransformer()
+    tf = transformer.LetterLevelTransformer()
     features = []
     true_labels = []
     converted_anns = []
