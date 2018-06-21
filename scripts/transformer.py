@@ -100,8 +100,9 @@ class LetterLevelTransformer:
             elif label == 'M':
                 entity += c
             elif label == 'E':
-                entity += c
-                ann_datas.append({entity: (start, i)})
+                if not entity == ' ':
+                #entity += c
+                    ann_datas.append({entity: (start, i)})
                 entity = ''
         return ann_datas
 

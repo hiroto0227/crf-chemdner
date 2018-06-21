@@ -3,7 +3,7 @@ from scripts import transformer
 from scripts import models
 import config
 from tqdm import tqdm
-
+from termcolor import cprint
 
 if __name__ == '__main__':
     test_texts, test_anns = datasets.test()
@@ -27,6 +27,11 @@ if __name__ == '__main__':
     for test_text, pred_label, true_label in tqdm(zip(test_texts, pred_labels, true_labels)):
         pred_anns = tf.convertLabelsToAnn(test_text, pred_label)
         true_anns = tf.convertLabelsToAnn(test_text, true_label)
+        if pred_anns != true_anns:
+            cprint('-' * 30, 'red')
+            print(true_anns)
+            print('-' * 10)
+            print(pred_anns)
         all_true_count += len(true_anns)
         all_pred_count += len(pred_anns)
         for p in pred_anns:
