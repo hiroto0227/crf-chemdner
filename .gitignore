@@ -3,7 +3,7 @@
 /storage/datas/train/
 /storage/datas/valid/
 /storage/datas/test/
-
+/storage/datas/short/
 /storage/models/
 
 /storage/transformers/
