@@ -6,16 +6,16 @@ from tqdm import tqdm
 
 
 if __name__ == '__main__':
-    test_texts, test_anns = datasets.test()
+    test_texts, test_anns, _ = datasets.test()
     tf = transformer.WordLevelTransformer()
     features = []
     true_labels = []
     for text, ann in tqdm(zip(test_texts, test_anns)):
-        features.append(tf.convertTextToFeatures(text))
-        true_labels.append(tf.convertAnnsToLabels(ann, text))
+        features.append(tf.text2features(text))
+        true_labels.append(tf.text_anns2labels(ann, text))
     # load model
     model = models.CRFModel()
-    model.load(config.model_root + 'crf_suite_word')
+    model.load(config.model_root + 'word_lbfgs_0.001_0.001_1_1')
     # predict label
     print('------ start predicting -------')
     pred_labels = [model.predict(feature) for feature in features]
@@ -25,8 +25,8 @@ if __name__ == '__main__':
     all_true_count = 0
     all_pred_count = 0
     for test_text, pred_label, true_label in tqdm(zip(test_texts, pred_labels, true_labels)):
-        pred_anns = tf.convertLabelsToAnn(test_text, pred_label)
-        true_anns = tf.convertLabelsToAnn(test_text, true_label)
+        pred_anns = tf.text_labels2ann(test_text, pred_label)
+        true_anns = tf.text_labels2ann(test_text, true_label)
         all_true_count += len(true_anns)
         all_pred_count += len(pred_anns)
         for p in pred_anns:

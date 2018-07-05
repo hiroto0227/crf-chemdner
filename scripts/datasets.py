@@ -54,4 +54,16 @@ def test():
         with open(config.test_data_root + '{}.ann'.format(file_id)) as f:
             anns.append(convertAnnData(f.read().split('\n')))
     assert len(texts) == len(anns), 'must have the same length texts and anns'
+    return texts, anns, file_ids
+
+def short():
+    texts = []
+    anns = []
+    file_ids = [f[:-4] for f in os.listdir(config.short_data_root) if f[-4:] == '.txt']
+    for file_id in tqdm(file_ids):
+        with open(config.short_data_root + '{}.txt'.format(file_id)) as f:
+            texts.append(f.read())
+        with open(config.short_data_root + '{}.ann'.format(file_id)) as f:
+            anns.append(convertAnnData(f.read().split('\n')))
+    assert len(texts) == len(anns), 'must have the same length texts and anns'
     return texts, anns

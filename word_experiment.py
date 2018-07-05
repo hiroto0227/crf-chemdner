@@ -11,8 +11,8 @@ if __name__ == '__main__':
     features = []
     labels = []
     for text, ann in tqdm(zip(train_texts, train_anns)):
-        features.extend(tf.convertTextToFeatures(text))
-        labels.extend(tf.convertAnnsToLabels(ann, text))
+        features.extend(tf.text2features(text))
+        labels.extend(tf.text_ann2labels(text, ann))
     print('training start !!!')
     word_trainer = trainer.CRFTrainer()
     word_trainer.train(config.model_root + 'crf_suite_word', features, labels)
