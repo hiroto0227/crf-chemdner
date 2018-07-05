@@ -48,7 +48,7 @@ if __name__ == '__main__':
         all_pred_count += len(pred_anns)
         for p in pred_anns:
             for t in true_anns:
-                if p == t:
+                if p.values() == t.values():
                     correct_count += 1
         #with open('./test_ann_files/{}.ann'.format(file_id), 'wt') as f:
         #    f.write(ann_to_annfile(pred_anns))

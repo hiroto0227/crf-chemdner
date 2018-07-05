@@ -15,7 +15,7 @@ if __name__ == '__main__':
         true_labels.append(tf.text_anns2labels(ann, text))
     # load model
     model = models.CRFModel()
-    model.load(config.model_root + 'word_lbfgs_0.001_0.001_1_1')
+    model.load(config.model_root + 'crf_suite_word_ht_0')
     # predict label
     print('------ start predicting -------')
     pred_labels = [model.predict(feature) for feature in features]
@@ -31,7 +31,7 @@ if __name__ == '__main__':
         all_pred_count += len(pred_anns)
         for p in pred_anns:
             for t in true_anns:
-                if p == t:
+                if t == p:
                     correct_count += 1
     print('全entity数 : {}'.format(all_true_count))
     print('予測entity数 : {}'.format(all_pred_count))
